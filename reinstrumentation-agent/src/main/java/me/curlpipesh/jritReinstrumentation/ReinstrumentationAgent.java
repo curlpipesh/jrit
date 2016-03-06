@@ -22,6 +22,7 @@ public class ReinstrumentationAgent {
      * @param instrumentation Self-explanatory
      */
     public static void agentmain(final String agentArgs, final Instrumentation instrumentation) {
+        // TODO: Fix blatantly ignoring InternalErrors.........
         System.err.println("Preparing update...");
         final String[] split = agentArgs.split(":");
         final String name = split[0];
@@ -41,6 +42,7 @@ public class ReinstrumentationAgent {
                     CheckClassAdapter.verify(classReader, false, new PrintWriter(System.err));
 
                     return bytes;
+                } catch(final InternalError ignored) {
                 } catch (final Exception e) {
                     System.err.println("Error doing instrumentation:\n" + e.getClass().getSimpleName()
                             + ": " + e.getMessage());
@@ -52,6 +54,7 @@ public class ReinstrumentationAgent {
             for (final Class<?> c : instrumentation.getInitiatedClasses(Class.forName(getMainClassName()).getClassLoader())) {
                 try {
                     instrumentation.retransformClasses(c);
+                } catch(final InternalError ignored) {
                 } catch (final Throwable e) {
                     if(e instanceof UnmodifiableClassException) {
                         continue;
@@ -60,6 +63,7 @@ public class ReinstrumentationAgent {
                             + ": " + e.getMessage());
                 }
             }
+        } catch(final InternalError ignored) {
         } catch (final Throwable e) {
             System.err.println("Error doing instrumentation:\n" + e.getClass().getSimpleName()
                     + ": " + e.getMessage());
