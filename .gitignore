@@ -1,0 +1,6 @@
+*.iml
+*/*.iml
+*/target
+finalOutput
+dependency-reduced-pom.xml
+*/dependency-reduced-pom.xml
