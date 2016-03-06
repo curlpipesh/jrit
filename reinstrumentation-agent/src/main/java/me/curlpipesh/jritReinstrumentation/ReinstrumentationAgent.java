@@ -42,7 +42,7 @@ public class ReinstrumentationAgent {
 
                     return bytes;
                 } catch (final Exception e) {
-                    JOptionPane.showMessageDialog(null, "Error doing instrumentation:\n" + e.getClass().getSimpleName()
+                    System.err.println("Error doing instrumentation:\n" + e.getClass().getSimpleName()
                             + ": " + e.getMessage());
                 }
             }
