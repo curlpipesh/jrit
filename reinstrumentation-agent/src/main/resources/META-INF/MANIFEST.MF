@@ -1,0 +1,4 @@
+Agent-Class: me.curlpipesh.jritReinstrumentation.ReinstrumentationAgent
+Can-Redefine-Classes: true
+Can-Retransform-Classes: true
+Main-Class: me.curlpipesh.jritReinstrumentation.ReinstrumentationAgent

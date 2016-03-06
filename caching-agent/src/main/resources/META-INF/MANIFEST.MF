@@ -1,0 +1,3 @@
+Agent-Class: me.curlpipesh.jritCaching.BytecodeCachingAgent
+Can-Redefine-Classes: true
+Can-Retransform-Classes: true
