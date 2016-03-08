@@ -1,13 +1,11 @@
 package me.curlpipesh.jritCaching.desc;
 
 import lombok.Value;
-import me.curlpipesh.jritCaching.CachedClass;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -40,7 +38,8 @@ public class ClassDesc {
     }
 
     @SuppressWarnings({"unchecked", "DynamicRegexReplaceableByCompiledPattern"})
-    public void analyse(final Map<String, List<CachedClass>> pkgCachedClassMap) {
+    public void analyse() {
+        // TODO: Is used?
         getMethods().addAll(((List<MethodNode>) getNode().methods).stream()
                 .map(m -> new MethodDesc(m, getNode(), m.access, m.name, m.desc, m.signature,
                         (String[]) m.exceptions.toArray(new String[m.exceptions.size()]))).collect(Collectors.toList()));

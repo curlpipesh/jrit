@@ -6,14 +6,16 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.util.CheckClassAdapter;
 
-import javax.swing.*;
 import java.io.PrintWriter;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.util.Base64;
 
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection", "TypeMayBeWeakened"})
-public class ReinstrumentationAgent {
+public final class ReinstrumentationAgent {
+    private ReinstrumentationAgent() {
+    }
+
     /**
      * <tt>agentArgs</tt> expected to be input as className:base64Bytecode
      *
@@ -29,7 +31,7 @@ public class ReinstrumentationAgent {
         final String b64Bytes = split[1];
         final byte[] classBytes = Base64.getDecoder().decode(b64Bytes);
         instrumentation.addTransformer((loader, className, classBeingRedefined, protectionDomain, classfileBuffer) -> {
-            if (name.trim().equalsIgnoreCase(classBeingRedefined.getName().trim())) {
+            if(name.trim().equalsIgnoreCase(classBeingRedefined.getName().trim())) {
                 try {
                     System.err.println("Updating class: " + classBeingRedefined.getName());
                     final ClassReader classReader = new ClassReader(classBytes);
@@ -43,7 +45,7 @@ public class ReinstrumentationAgent {
 
                     return bytes;
                 } catch(final InternalError ignored) {
-                } catch (final Exception e) {
+                } catch(final Exception e) {
                     System.err.println("Error doing instrumentation:\n" + e.getClass().getSimpleName()
                             + ": " + e.getMessage());
                 }
@@ -51,11 +53,11 @@ public class ReinstrumentationAgent {
             return classfileBuffer;
         }, true);
         try {
-            for (final Class<?> c : instrumentation.getInitiatedClasses(Class.forName(getMainClassName()).getClassLoader())) {
+            for(final Class<?> c : instrumentation.getInitiatedClasses(Class.forName(getMainClassName()).getClassLoader())) {
                 try {
                     instrumentation.retransformClasses(c);
                 } catch(final InternalError ignored) {
-                } catch (final Throwable e) {
+                } catch(final Throwable e) {
                     if(e instanceof UnmodifiableClassException) {
                         continue;
                     }
@@ -64,7 +66,7 @@ public class ReinstrumentationAgent {
                 }
             }
         } catch(final InternalError ignored) {
-        } catch (final Throwable e) {
+        } catch(final Throwable e) {
             System.err.println("Error doing instrumentation:\n" + e.getClass().getSimpleName()
                     + ": " + e.getMessage());
         }
@@ -90,10 +92,10 @@ public class ReinstrumentationAgent {
         try {
             final VirtualMachine virtualMachine = VirtualMachine.attach(args[0]);
             virtualMachine.loadAgent(ReinstrumentationAgent.class.getProtectionDomain().getCodeSource().getLocation().getFile(),
-                    args[1] + ":" + args[2]);
+                    args[1] + ':' + args[2]);
             virtualMachine.detach();
             System.err.println("Done!");
-        } catch (final Exception e) {
+        } catch(final Exception e) {
             e.printStackTrace();
         }
     }

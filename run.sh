@@ -5,7 +5,7 @@ source vars.sh
 cd $DIRECTORY
 # Now this is a truly ugly hack. For some reason, bash doesn't want to expand things properly,
 # so we list everything in $DIRECTORY and convert it into a colon-delimited string
-CLASSPATH=$(ls . | sed -e ':a;N;$!ba;s/\n/:/g' -e 's/^/\/usr\/lib\/jvm\/java-8-oracle\/lib\/tools.jar:/')
+CLASSPATH=$(ls . | sed -e ':a;N;$!ba;s/\n/:/g' -e 's/^/\/usr\/lib\/jvm\/java-8-jdk\/lib\/tools.jar:/')
 
 echo $CLASSPATH
 

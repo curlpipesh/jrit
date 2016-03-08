@@ -20,7 +20,7 @@ import java.util.List;
  * @since 3/5/16
  */
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection", "TypeMayBeWeakened"})
-public class BytecodeCachingAgent {
+public final class BytecodeCachingAgent {
     /**
      * The list of class bytecode that has been cached by this agent.
      * <p>
@@ -37,6 +37,9 @@ public class BytecodeCachingAgent {
      * The number of classes that have been cached. Used for debug printing.
      */
     private static int cacheCounter;
+
+    private BytecodeCachingAgent() {
+    }
 
     /**
      * Run when something attaches a new instance of this
@@ -58,10 +61,10 @@ public class BytecodeCachingAgent {
             String pkg;
             try {
                 pkg = classBeingRedefined.getPackage().getName();
-                if (pkg.isEmpty()) {
+                if(pkg.isEmpty()) {
                     throw new Exception("Falling down to catch{} to handle because lazy~ Something something DRY~");
                 }
-            } catch (final Exception e) {
+            } catch(final Exception e) {
                 System.err.println("Found default package: " + classBeingRedefined.getName());
                 pkg = "<default package>";
             }
@@ -70,7 +73,7 @@ public class BytecodeCachingAgent {
                 cachedBytecode.add(new CachedClass(classBeingRedefined.getSimpleName(), pkg,
                         classfileBuffer));
                 ++cacheCounter;
-            } catch (final Exception e) {
+            } catch(final Exception e) {
                 System.err.println("Class failed: " + classBeingRedefined.getName());
                 e.printStackTrace();
             }
@@ -78,16 +81,16 @@ public class BytecodeCachingAgent {
         }, true);
         try {
             // Apparently this works to instrument everything.
-            for (final Class<?> c : instrumentation.getInitiatedClasses(Class.forName(getMainClassName()).getClassLoader())) {
+            for(final Class<?> c : instrumentation.getInitiatedClasses(Class.forName(getMainClassName()).getClassLoader())) {
                 try {
                     // #TestedWithMinecraft ;-;
                     instrumentation.retransformClasses(c);
-                } catch (final UnmodifiableClassException ignored) {
+                } catch(final UnmodifiableClassException ignored) {
                     cachedBytecode.stream().filter(e -> e.getName().equals(c.getSimpleName())).forEach(cachedBytecode::remove);
                     System.err.println("Ignored immutable class: " + c.getName());
                 }
             }
-        } catch (final ClassNotFoundException e) {
+        } catch(final ClassNotFoundException e) {
             e.printStackTrace();
         }
         System.out.println("Cached " + cacheCounter + " classes.");
@@ -114,6 +117,7 @@ public class BytecodeCachingAgent {
      * namely a class from <tt>rt.jar</tt>.
      *
      * @param c The class to check
+     *
      * @return <tt>true</tt> if the class was loaded from <tt>rt.jar</tt>,
      * <tt>false</tt> otherwise.
      */
@@ -123,7 +127,7 @@ public class BytecodeCachingAgent {
             final String l = c.getProtectionDomain().getCodeSource().getLocation().toString();
             return l.contains("rt.jar") || c.getName().contains("/")
                     || pkg.startsWith("java") || pkg.startsWith("sun") || pkg.startsWith("com.sun");
-        } catch (final Exception e) {
+        } catch(final Exception e) {
             // If an exception is thrown, automatically assume that it's an issue.
             return true;
         }

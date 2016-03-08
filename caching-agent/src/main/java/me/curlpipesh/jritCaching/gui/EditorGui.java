@@ -74,7 +74,7 @@ public class EditorGui extends JFrame {
         for (final Entry<String, List<CachedClass>> entry : cachedPkgClassMap.entrySet()) {
             for (final CachedClass cachedClass : entry.getValue()) {
                 // "Analysis." Currently just getting method bodies
-                cachedClass.getDesc().analyse(cachedPkgClassMap);
+                cachedClass.getDesc().analyse();
             }
         }
 
@@ -142,8 +142,8 @@ public class EditorGui extends JFrame {
                         + "/../lib/tools.jar:" + EditorGui.class.getProtectionDomain().getCodeSource().getLocation()
                         .toString().replaceAll("file:", "").replaceAll("caching", "reinstrumentation")
                         + " me.curlpipesh.jritReinstrumentation.ReinstrumentationAgent "
-                        + ManagementFactory.getRuntimeMXBean().getName().split("@")[0] + " " + cc.getPkg() + '.'
-                        + cc.getName() + " " + Base64.getEncoder().encodeToString(bytes));
+                        + ManagementFactory.getRuntimeMXBean().getName().split("@")[0] + ' ' + cc.getPkg() + '.'
+                        + cc.getName() + ' ' + Base64.getEncoder().encodeToString(bytes));
                 final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                 bufferedReader.lines().forEach(System.out::println);
             } catch (final Exception e) {
@@ -374,14 +374,14 @@ public class EditorGui extends JFrame {
 
         @Override
         public void addTreeModelListener(final TreeModelListener l) {
-            if ((l != null) && !listeners.contains(l)) {
+            if (l != null && !listeners.contains(l)) {
                 listeners.add(l);
             }
         }
 
         @Override
         public void removeTreeModelListener(final TreeModelListener l) {
-            if ((l != null) && listeners.contains(l)) {
+            if (l != null && listeners.contains(l)) {
                 listeners.remove(l);
             }
         }
