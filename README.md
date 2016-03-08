@@ -2,6 +2,8 @@
 A utility for instrumenting Java bytecode at runtime. Put under the Apache License because I'm not that picky about who uses it for what.
 
 ## Building
+Requires maven and Java 8.
+
 `./build.sh`. If you wish to run it as well, either run `./run.sh` after building, or run `./full.sh` to build everything at once.
 
 ## Usage
